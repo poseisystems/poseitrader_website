@@ -1,79 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
   <head>
-  
-  <style>
-        /* Add Coming Soon button styles */
-        .coming-soon-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .coming-soon-btn {
-            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .coming-soon-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
-        
-        .copy-btn {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .copy-btn:hover {
-            background: #45a049;
-            transform: scale(1.05);
-        }
-        
-        .copy-btn.copied {
-            background: #2196F3;
-        }
-        
-        .tooltip {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .tooltip.show {
-            opacity: 1;
-        }
-    </style>
-	
-	
-	
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
@@ -320,18 +247,6 @@
     </style>
   </head>
   <body class="__className_e8ce0c">
-  
-  
-  <div class="coming-soon-container">
-        <button class="coming-soon-btn" onclick="copyComingSoon()">Coming Soon</button>
-        <button class="copy-btn" onclick="copyComingSoon()" title="Copy 'Coming Soon'">
-            📋
-        </button>
-        <div class="tooltip" id="copyTooltip">Copied!</div>
-    </div>
-	
-	
-	
     <style data-emotion="css i6bazn">
       .css-i6bazn {
         overflow: hidden;
@@ -6155,68 +6070,140 @@ install -U posei_trader</pre
 	
 	
 	<script>
-        function copyComingSoon() {
-            const textToCopy = "Coming Soon";
-            
-            // Create a temporary textarea element
-            const textarea = document.createElement('textarea');
-            textarea.value = textToCopy;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            
-            // Select and copy the text
-            textarea.select();
-            textarea.setSelectionRange(0, 99999); // For mobile devices
-            
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showCopyTooltip();
-                }
-            } catch (err) {
-                console.error('Failed to copy text: ', err);
-            }
-            
-            // Clean up
-            document.body.removeChild(textarea);
+// Wait for the page to fully load
+window.addEventListener('load', function() {
+    // Create the coming soon container
+    const comingSoonContainer = document.createElement('div');
+    comingSoonContainer.className = 'coming-soon-container';
+    comingSoonContainer.innerHTML = `
+        <button class="coming-soon-btn" onclick="copyComingSoon()">Coming Soon</button>
+        <button class="copy-btn" onclick="copyComingSoon()" title="Copy 'Coming Soon'">
+            📋
+        </button>
+        <div class="tooltip" id="copyTooltip">Copied!</div>
+    `;
+    
+    // Add to the body
+    document.body.appendChild(comingSoonContainer);
+    
+    // Add the styles
+    const styles = `
+        .coming-soon-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        function showCopyTooltip() {
-            const tooltip = document.getElementById('copyTooltip');
-            const copyBtn = document.querySelector('.copy-btn');
-            
-            // Show tooltip
-            tooltip.classList.add('show');
-            copyBtn.classList.add('copied');
-            copyBtn.innerHTML = '✓';
-            
-            // Hide tooltip after 2 seconds
-            setTimeout(() => {
-                tooltip.classList.remove('show');
-                copyBtn.classList.remove('copied');
-                copyBtn.innerHTML = '📋';
-            }, 2000);
+        .coming-soon-btn {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
         }
         
-        // Alternative method using modern Clipboard API
-        async function copyComingSoonModern() {
-            try {
-                await navigator.clipboard.writeText("Coming Soon");
-                showCopyTooltip();
-            } catch (err) {
-                // Fallback to traditional method
-                copyComingSoon();
-            }
+        .coming-soon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
         
-        // Update the function to use modern API if available
-        if (navigator.clipboard) {
-            window.copyComingSoon = copyComingSoonModern;
+        .copy-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-    </script>
-	
-	
-	
+        
+        .copy-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+        
+        .copy-btn.copied {
+            background: #2196F3;
+        }
+        
+        .tooltip {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+    `;
+    
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = styles;
+    document.head.appendChild(styleSheet);
+});
+
+// Copy function
+async function copyComingSoon() {
+    try {
+        await navigator.clipboard.writeText("Coming Soon");
+        showCopyTooltip();
+    } catch (err) {
+        // Fallback to traditional method
+        const textarea = document.createElement('textarea');
+        textarea.value = "Coming Soon";
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showCopyTooltip();
+        } catch (e) {
+            console.error('Copy failed:', e);
+        }
+        document.body.removeChild(textarea);
+    }
+}
+
+function showCopyTooltip() {
+    const tooltip = document.getElementById('copyTooltip');
+    const copyBtn = document.querySelector('.copy-btn');
+    
+    if (tooltip && copyBtn) {
+        tooltip.classList.add('show');
+        copyBtn.classList.add('copied');
+        copyBtn.innerHTML = '✓';
+        
+        setTimeout(() => {
+            tooltip.classList.remove('show');
+            copyBtn.classList.remove('copied');
+            copyBtn.innerHTML = '📋';
+        }, 2000);
+    }
+}
+</script>
+
+
+
   </body>
 </html>
