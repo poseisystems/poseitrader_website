@@ -6080,8 +6080,8 @@ install -U posei_trader</pre
             display: flex !important;
             align-items: center;
             gap: 10px;
-            margin-left: auto;
-            margin-right: 10px;
+            margin-left: 0;
+            margin-right: 0;
             position: relative;
             z-index: 9999;
         }
@@ -6197,26 +6197,33 @@ install -U posei_trader</pre
             <div class="tooltip" id="copyTooltip">Copied!</div>
         `;
         
-        // Find the header container with class css-1bfcs35 (the flex container)
-        const headerContainer = document.querySelector('.css-1bfcs35');
+        // Find the right-side button group (the div containing Get Started and Join X)
+        // Look for the div that contains "Join X" text (the last button)
+        const joinXText = Array.from(document.querySelectorAll('p')).find(p => p.textContent.trim() === 'Join X');
+        let rightButtonGroup = null;
         
-        if (headerContainer) {
-            // Append to the end of the header container (right side)
-            // This will place buttons on the right due to justify-content: space-between
-            headerContainer.appendChild(comingSoonContainer);
-        } else {
-            // Fallback: try to find by logo link
-            const logoLink = document.querySelector('a[href="index.htm"]');
-            if (logoLink) {
-                let parent = logoLink.parentElement;
-                while (parent && parent !== document.body) {
-                    const style = window.getComputedStyle(parent);
-                    if (style.display === 'flex') {
-                        parent.appendChild(comingSoonContainer);
-                        break;
-                    }
-                    parent = parent.parentElement;
+        if (joinXText) {
+            // Find the parent div that contains both Get Started and Join X buttons
+            let parent = joinXText.closest('a');
+            if (parent) {
+                // Find the parent div that contains all the right-side buttons
+                rightButtonGroup = parent.parentElement;
+                // Check if this is the right container (should have multiple <a> children)
+                const links = rightButtonGroup.querySelectorAll('a');
+                if (links.length >= 2) {
+                    // Insert buttons after the Join X button (at the end)
+                    rightButtonGroup.appendChild(comingSoonContainer);
+                } else {
+                    rightButtonGroup = null;
                 }
+            }
+        }
+        
+        // Fallback: find the header container and append to right side
+        if (!rightButtonGroup) {
+            const headerContainer = document.querySelector('.css-1bfcs35');
+            if (headerContainer) {
+                headerContainer.appendChild(comingSoonContainer);
             } else {
                 // Final fallback: append to body with fixed positioning
                 document.body.appendChild(comingSoonContainer);
