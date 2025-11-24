@@ -6071,69 +6071,84 @@ install -U posei_trader</pre
 	
 	<script>
 // Wait for the page to fully load
-window.addEventListener('load', function() {
-    // Create the coming soon container
-    const comingSoonContainer = document.createElement('div');
-    comingSoonContainer.className = 'coming-soon-container';
-    comingSoonContainer.innerHTML = `
-        <button class="coming-soon-btn" onclick="copyComingSoon()">CA: Coming Soon</button>
-        <button class="copy-btn" onclick="copyComingSoon()" title="Copy 'Coming Soon'">
-            📋
-        </button>
-        <div class="tooltip" id="copyTooltip">Copied!</div>
-    `;
-    
-    // Add to the body
-    document.body.appendChild(comingSoonContainer);
-    
-    // Add the styles
-    const styles = `
+(function() {
+    // Add the styles first
+    if (!document.querySelector('#coming-soon-styles')) {
+        const styles = `
         .coming-soon-container {
-            position: fixed;
-            top: 50px;
-            left: 400px;
-            z-index: 9999;
-            display: flex;
+            display: flex !important;
             align-items: center;
             gap: 10px;
+            margin-left: auto;
+            margin-right: 10px;
+            position: relative;
+            z-index: 9999;
+        }
+        
+        /* Fallback for when inserted into body */
+        body > .coming-soon-container {
+            position: fixed !important;
+            top: 50px !important;
+            left: 120px !important;
+            z-index: 9999 !important;
         }
         
         .coming-soon-btn {
-            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 14px;
+            background: linear-gradient(
+              0deg,
+              rgba(0, 205, 178, 0.24) 10%,
+              rgba(47, 173, 215, 1) 100%
+            );
+            color: #eeeeee;
+            border: 2px solid #1e353d;
+            padding: 9px 19px;
+            border-radius: 50px;
+            font-weight: 300;
+            font-size: 0.8rem;
+            font-family: "IBM Plex Sans", sans-serif;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
         }
         
         .coming-soon-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            box-shadow: 1px 1px 15px rgba(47, 172, 214, 0.5),-1px -1px 15px rgba(47, 172, 214, 0.5);
+            cursor: pointer;
         }
         
         .copy-btn {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            background-image: radial-gradient(
+                circle at 50% 0,
+                #0f2026,
+                #1b1d1c
+            );
+            color: #eeeeee;
+            border: 2px solid #1e353d;
+            padding: 9px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 550;
+            font-family: "IBM Plex Sans", sans-serif;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: auto;
+            line-height: 1;
         }
         
         .copy-btn:hover {
-            background: #45a049;
-            transform: scale(1.05);
+            box-shadow: 1px 1px 10px rgba(47, 172, 214, 0.5),
+                        -1px -1px 10px rgba(47, 172, 214, 0.5);
+            cursor: pointer;
         }
         
         .copy-btn.copied {
-            background: #2196F3;
+            background: linear-gradient(135deg, rgba(47, 172, 214, 1) 0%, rgba(47, 173, 215, 1) 100%);
         }
         
         .tooltip {
@@ -6158,9 +6173,69 @@ window.addEventListener('load', function() {
     `;
     
     const styleSheet = document.createElement('style');
+    styleSheet.id = 'coming-soon-styles';
     styleSheet.textContent = styles;
     document.head.appendChild(styleSheet);
-});
+    }
+    
+    function initButtons() {
+        // Check if buttons already exist
+        if (document.querySelector('.coming-soon-container')) {
+            return;
+        }
+        
+        // Create the coming soon container
+        const comingSoonContainer = document.createElement('div');
+        comingSoonContainer.className = 'coming-soon-container';
+        comingSoonContainer.innerHTML = `
+            <button class="coming-soon-btn" onclick="copyComingSoon()">CA: Coming Soon</button>
+            <button class="copy-btn" onclick="copyComingSoon()" title="Copy 'Coming Soon'">
+                📋
+            </button>
+            <div class="tooltip" id="copyTooltip">Copied!</div>
+        `;
+        
+        // Find the header container with class css-1bfcs35 (the flex container)
+        const headerContainer = document.querySelector('.css-1bfcs35');
+        
+        if (headerContainer) {
+            // Append to the end of the header container (right side)
+            // This will place buttons on the right due to justify-content: space-between
+            headerContainer.appendChild(comingSoonContainer);
+        } else {
+            // Fallback: try to find by logo link
+            const logoLink = document.querySelector('a[href="index.htm"]');
+            if (logoLink) {
+                let parent = logoLink.parentElement;
+                while (parent && parent !== document.body) {
+                    const style = window.getComputedStyle(parent);
+                    if (style.display === 'flex') {
+                        parent.appendChild(comingSoonContainer);
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
+            } else {
+                // Final fallback: append to body with fixed positioning
+                document.body.appendChild(comingSoonContainer);
+            }
+        }
+    }
+    
+    // Try multiple events to ensure it runs
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initButtons);
+    } else {
+        initButtons();
+    }
+    
+    // Also try on load as backup
+    window.addEventListener('load', function() {
+        if (!document.querySelector('.coming-soon-container')) {
+            initButtons();
+        }
+    });
+})();
 
 // Copy function
 async function copyComingSoon() {
