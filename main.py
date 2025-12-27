@@ -639,6 +639,7 @@ def modify_python_file(filepath):
         else:
             # Add Poseitrader Website comment before class
             for i, line in enumerate(lines):
+                # Poseitrader Website: Class enhancement for Poseitrader Website
                 if 'class ' in line:
                     indent = len(line) - len(line.lstrip())
                     comment = ' ' * indent + "# Poseitrader Website: Class enhancement for Poseitrader Website"
